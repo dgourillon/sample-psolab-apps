@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Overall OS variables 
-
-psolab_os_password='ps0lab!'
-psolab_govc_password=ps0Lab\!admin
-OVF_bucket=psolab-ovas-dgo
-
 # OS prerequisites
 echo $psolab_os_password | sudo -S apt install git ansible -y
 echo $psolab_os_password | sudo -S sed -i 's/#host_key_checking = False/host_key_checking = False/g' /etc/ansible/ansible.cfg 
