@@ -36,7 +36,7 @@ create_vm_from_ovf_template()
 
 }
 
-shell_from_ansible()
+remote_shell_script_exec_with_ansible()
 {
     hosts=$1
     script_path=$2
@@ -60,3 +60,4 @@ ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m selinux -a 'state=disabled
 ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m yum -a 'name=epel-release state=present' all --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
 
 
+remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_mysql.sh
