@@ -67,4 +67,4 @@ remote_shell_script_exec_with_ansible  "$IP_DB_1," deploy_mysql_master.sh
 ## Deploy the druppal app
 remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal_base.sh
 
-remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal_site.sh
+remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal_site.sh "$IP_DB_1"
