@@ -1,0 +1,9 @@
+---
+- name: Disable selinux
+  selinux: state=disabled
+
+- name: Enable EPEL repository
+  yum: name=epel-release state=present
+
+- name: Install Mysql 2022 GPG key
+  rpm_key: state=present key=https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
