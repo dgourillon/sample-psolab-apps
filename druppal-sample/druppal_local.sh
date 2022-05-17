@@ -6,7 +6,7 @@ setenforce 0
 systemctl stop firewalld
 systemctl disable firewalld
 
-yum install  -y
+yum install  -y mariadb
  systemctl start mariadb
  systemctl enable mariadb
 

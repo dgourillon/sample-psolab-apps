@@ -36,31 +36,27 @@ create_vm_from_ovf_template()
 
 }
 
-NUMBER_OF_APP_SERVERS=1
-NUMBER_OF_DB_SERVERS=1
+shell_from_ansible()
+{
+    hosts=$1
+    script_path=$2
+    ansible -i $hosts all -m copy -a "src=$script_path dest=/root/$script_path mode=u+x"
+    ansible -i $hosts all -m shell -a "/root/$script_path"
+}
+
 RANDOM_ID=$(echo $RANDOM)
 
-echo '' > hosts
-echo "[app]" >> hosts
-for i in $( eval echo {1..$NUMBER_OF_APP_SERVERS} )
-do
-   echo "create VM centos7-drupal$RANDOM_ID-app-$i"
-   create_vm_from_ovf_template centos7-base centos7-drupal$RANDOM_ID-app-$i
-   govc vm.ip centos7-base centos7-drupal$RANDOM_ID-app-$i
-   current_ip=$(govc vm.ip centos7-drupal$RANDOM_ID-app-$i) 
-   echo $current_ip >> hosts
-   ssh-keygen -f "/home/labUser/.ssh/known_hosts" -R $current_ip
-done
-echo '' >> hosts
-echo "[db]" >> hosts
-for i in $( eval echo {1..$NUMBER_OF_DB_SERVERS} )
-do
-   echo "create VM centos7-drupal$RANDOM_ID-db-$i"
-   create_vm_from_ovf_template centos7-base centos7-drupal$RANDOM_ID-db-$i
-   current_ip=$(govc vm.ip centos7-drupal$RANDOM_ID-db-$i) 
-   echo $current_ip >> hosts
-    ssh-keygen -f "/home/labUser/.ssh/known_hosts" -R $current_ip
-done
+create_vm_from_ovf_template centos7-base centos7-drupal$RANDOM_ID-app-1
+create_vm_from_ovf_template centos7-base centos7-drupal$RANDOM_ID-app-2
+create_vm_from_ovf_template centos7-base centos7-drupal$RANDOM_ID-db-1
+create_vm_from_ovf_template centos7-base centos7-drupal$RANDOM_ID-db-2
+
+IP_APP_1=$(govc vm.ip centos7-drupal$RANDOM_ID-app-1)
+IP_APP_2=$(govc vm.ip centos7-drupal$RANDOM_ID-app-2)
+IP_DB_1=$(govc vm.ip centos7-drupal$RANDOM_ID-db-1)
+IP_DB_2=$(govc vm.ip centos7-drupal$RANDOM_ID-db-2)
+
+ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m selinux -a 'state=disabled' all --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
+ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m yum -a 'name=epel-release state=present' all --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
 
 
-  
