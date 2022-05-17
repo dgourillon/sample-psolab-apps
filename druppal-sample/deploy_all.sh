@@ -40,8 +40,9 @@ remote_shell_script_exec_with_ansible()
 {
     hosts=$1
     script_path=$2
+    script_args=$3
     ansible -i $hosts all -m copy -a "src=$script_path dest=/root/$script_path mode=u+x" --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
-    ansible -i $hosts all -m shell -a "/root/$script_path" --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
+    ansible -i $hosts all -m shell -a "/root/$script_path $script_args" --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
 }
 
 RANDOM_ID=$(echo $RANDOM)
@@ -56,8 +57,12 @@ IP_APP_2=$(govc vm.ip centos7-drupal$RANDOM_ID-app-2)
 IP_DB_1=$(govc vm.ip centos7-drupal$RANDOM_ID-db-1)
 IP_DB_2=$(govc vm.ip centos7-drupal$RANDOM_ID-db-2)
 
+echo ""
 ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m selinux -a 'state=disabled' all --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
 ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m yum -a 'name=epel-release state=present' all --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
 
+## Deploy the mysql stack
+remote_shell_script_exec_with_ansible  "$IP_DB_1," deploy_mysql_master.sh
 
-remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_mysql.sh
+## Deploy the druppal app
+remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal.sh

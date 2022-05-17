@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum install  -y mariadb
+yum install  -y mariadb-server
 systemctl start mariadb
 systemctl enable mariadb
 
