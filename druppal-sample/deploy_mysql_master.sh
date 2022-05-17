@@ -3,6 +3,8 @@
 sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux
 setenforce 0
 
+systemctl disable firewalld
+systemctl stop firewalld
 
 yum install  -y mariadb-server
 systemctl start mariadb
