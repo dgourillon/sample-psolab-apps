@@ -40,8 +40,8 @@ remote_shell_script_exec_with_ansible()
 {
     hosts=$1
     script_path=$2
-    ansible -i $hosts all -m copy -a "src=$script_path dest=/root/$script_path mode=u+x"
-    ansible -i $hosts all -m shell -a "/root/$script_path"
+    ansible -i $hosts all -m copy -a "src=$script_path dest=/root/$script_path mode=u+x" --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
+    ansible -i $hosts all -m shell -a "/root/$script_path" --extra-vars "ansible_user=root ansible_password=$psolab_os_password"
 }
 
 RANDOM_ID=$(echo $RANDOM)
