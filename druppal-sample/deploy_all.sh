@@ -65,4 +65,6 @@ ansible -i "$IP_APP_1,$IP_APP_2,$IP_DB_1,$IP_DB_2" -m yum -a 'name=epel-release 
 remote_shell_script_exec_with_ansible  "$IP_DB_1," deploy_mysql_master.sh
 
 ## Deploy the druppal app
-remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal.sh
+remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal_base.sh
+
+remote_shell_script_exec_with_ansible  "$IP_APP_1," deploy_drupal_site.sh
