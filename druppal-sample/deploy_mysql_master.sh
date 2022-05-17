@@ -1,5 +1,9 @@
 #!/bin/bash
 
+sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux
+setenforce 0
+
+
 yum install  -y mariadb-server
 systemctl start mariadb
 systemctl enable mariadb

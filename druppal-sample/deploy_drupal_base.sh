@@ -2,6 +2,9 @@
 
 IP_MYSQL=$1
 
+sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux
+setenforce 0
+
  yum install epel-release yum-utils -y
 
  sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
