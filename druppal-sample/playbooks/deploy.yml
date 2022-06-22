@@ -1,0 +1,14 @@
+---
+
+  - hosts: db
+    become: true
+    roles:
+      - install-mysql
+
+
+  - hosts: app
+    become: true
+    roles:
+      - install-php
+      - install-apache
+      - deploy-app
